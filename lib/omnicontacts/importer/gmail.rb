@@ -35,6 +35,7 @@ module OmniContacts
 
       def parse_contacts contacts_as_xml
         xml = REXML::Document.new(contacts_as_xml)
+        #puts xml
         contacts = []
         xml.elements.each('//entry') do |entry|
           gd_email = entry.elements['gd:email']
@@ -44,6 +45,10 @@ module OmniContacts
             if gd_name
               gd_full_name = gd_name.elements['gd:fullName']
               contact[:name] = gd_full_name.text if gd_full_name
+              gd_phoneNumber = entry.elements['gd:phoneNumber']
+              if gd_phoneNumber
+                contact[:phone] = gd_phoneNumber.map(&:to_s)[0]
+              end
             end
             contacts << contact
           end
